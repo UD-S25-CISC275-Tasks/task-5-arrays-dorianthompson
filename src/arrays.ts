@@ -1,3 +1,5 @@
+import { BooleanLiteral } from "typescript";
+
 /**
  * Consume an array of numbers, and return a new array containing
  * JUST the first and last number. If there are no elements, return
@@ -115,7 +117,32 @@ export function makeMath(addends: number[]): string {
  *
  * For instance, the array [1, 9, -5, 7] would become [1, 9, -5, 10, 7]
  * And the array [1, 9, 7] would become [1, 9, 7, 17]
+ *
+ * we a need running total
+ * we need the index when the negative is
+ * then we need to insert that total after the negative
+ * if no negative insert at end
  */
 export function injectPositive(values: number[]): number[] {
-    return [];
+    const firstNegativeIdx = values.findIndex(
+        (num: number): boolean => num < 0,
+    );
+    const total_array =
+        firstNegativeIdx !== -1 ? values.slice(0, firstNegativeIdx) : values;
+    const totalBeforeNegative = total_array.reduce(
+        (total: number, cur: number): number => cur + total,
+        0,
+    );
+
+    console.log(firstNegativeIdx);
+
+    const res_array =
+        firstNegativeIdx !== -1 ?
+            [
+                ...values.slice(0, firstNegativeIdx + 1),
+                totalBeforeNegative,
+                ...values.slice(firstNegativeIdx + 1),
+            ]
+        :   [...values, totalBeforeNegative];
+    return res_array;
 }
